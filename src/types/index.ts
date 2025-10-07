@@ -24,8 +24,8 @@ export interface PixelState {
 
 export interface GridData {
   pixels: PixelState[][];
-  width: number; // 500
-  height: number; // 500
+  width: number; // 20
+  height: number; // 20
 }
 
 export interface ImageProcessingOptions {
@@ -77,6 +77,6 @@ export const SUPPORTED_FORMATS: SupportedImageFormat[] = [
 ];
 
 // Constants
-export const GRID_SIZE = 500;
+export const GRID_SIZE = 20;
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const PIXEL_SCALE_FACTOR = 1; // For grid visualization scaling

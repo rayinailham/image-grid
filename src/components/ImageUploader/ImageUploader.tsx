@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { SUPPORTED_FORMATS, MAX_FILE_SIZE } from '@/types';
+import { MAX_FILE_SIZE } from '@/types';
 
 interface ImageUploaderProps {
   onImageUpload: (file: File) => void;
@@ -28,7 +28,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     onDrop,
     accept: {
-      'image/*': SUPPORTED_FORMATS,
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+      'image/webp': ['.webp'],
     },
     maxSize: MAX_FILE_SIZE,
     multiple: false,

@@ -47,10 +47,20 @@
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .pixel-cell:hover {
   z-index: 10;
+}
+
+.pixel-cell > div {
+  pointer-events: none;
+  user-select: none;
+  width: 100%;
 }
 
 .pixel-grid-placeholder {

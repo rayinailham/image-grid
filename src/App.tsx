@@ -138,7 +138,7 @@ const App: React.FC = () => {
               </div>
               
               <div className="grid-panel">
-                <h3>Pixel Grid Editor (500×500)</h3>
+                <h3>Pixel Grid Editor (20×20)</h3>
                 <PixelGrid
                   gridData={pixelGridData}
                   selectedPixel={selectedPixel}

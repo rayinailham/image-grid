@@ -10,7 +10,7 @@ const Layout: React.FC<LayoutProps> = ({ children, className = '' }) => {
     <div className={`app-layout ${className}`}>
       <header className="app-header">
         <h1>Image Grid Editor</h1>
-        <p>Edit images pixel by pixel on a 500×500 grid</p>
+        <p>Edit images pixel by pixel on a 20×20 grid</p>
       </header>
       
       <main className="app-main">

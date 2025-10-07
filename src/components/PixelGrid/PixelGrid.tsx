@@ -44,6 +44,32 @@ const PixelCell: React.FC<PixelCellProps> = ({
     transition: 'border-color 0.1s ease',
   }), [rgba, isSelected, isHovered, modified, cellSize]);
 
+  // Show RGB values if cell is large enough
+  // For very small cells (< 15px), don't show text
+  // For medium cells (15-40px), show compact format
+  // For large cells (>= 40px), show full format
+  const showRgbText = cellSize >= 15;
+  const useCompactFormat = cellSize < 40;
+  
+  // Calculate text color for contrast
+  const brightness = (rgba.r * 299 + rgba.g * 587 + rgba.b * 114) / 1000;
+  const textColor = brightness > 128 ? '#000000' : '#FFFFFF';
+  
+  const textStyle = useMemo(() => ({
+    fontSize: `${Math.max(6, cellSize / (useCompactFormat ? 10 : 8))}px`,
+    color: textColor,
+    textAlign: 'center' as const,
+    lineHeight: useCompactFormat ? `${cellSize / 4}px` : `${cellSize / 3.5}px`,
+    padding: '1px',
+    fontFamily: 'monospace',
+    fontWeight: 'bold' as const,
+    textShadow: brightness > 128 
+      ? '0 0 2px rgba(255, 255, 255, 0.8)' 
+      : '0 0 2px rgba(0, 0, 0, 0.8)',
+    whiteSpace: 'nowrap' as const,
+    overflow: 'hidden',
+  }), [cellSize, textColor, brightness, useCompactFormat]);
+
   return (
     <div
       className="pixel-cell"
@@ -53,7 +79,23 @@ const PixelCell: React.FC<PixelCellProps> = ({
       onMouseLeave={onMouseLeave}
       data-x={pixel.x}
       data-y={pixel.y}
-    />
+    >
+      {showRgbText && (
+        <div style={textStyle}>
+          {useCompactFormat ? (
+            // Compact format for smaller cells: show as "R,G,B"
+            <div>{rgba.r},{rgba.g},{rgba.b}</div>
+          ) : (
+            // Full format for larger cells: show each value on separate line
+            <>
+              <div>R:{rgba.r}</div>
+              <div>G:{rgba.g}</div>
+              <div>B:{rgba.b}</div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -71,13 +113,13 @@ const PixelGrid: React.FC<PixelGridProps> = ({
 
   // Calculate cell size based on zoom level
   const cellSize = useMemo(() => {
-    const baseSize = 4; // Base pixel size in pixels
-    return Math.max(1, Math.floor(baseSize * zoomLevel));
+    const baseSize = 30; // Base pixel size in pixels (increased for 20x20 grid)
+    return Math.max(15, Math.floor(baseSize * zoomLevel));
   }, [zoomLevel]);
 
-  // Calculate grid dimensions
-  const gridWidth = useMemo(() => 500 * cellSize, [cellSize]);
-  const gridHeight = useMemo(() => 500 * cellSize, [cellSize]);
+  // Calculate grid dimensions (20x20 grid)
+  const gridWidth = useMemo(() => 20 * cellSize, [cellSize]);
+  const gridHeight = useMemo(() => 20 * cellSize, [cellSize]);
 
   // Handle scroll changes
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -119,9 +161,9 @@ const PixelGrid: React.FC<PixelGridProps> = ({
     const viewportHeight = container.clientHeight;
     
     const startX = Math.max(0, Math.floor(scrollPosition.x / cellSize));
-    const endX = Math.min(499, Math.ceil((scrollPosition.x + viewportWidth) / cellSize));
+    const endX = Math.min(19, Math.ceil((scrollPosition.x + viewportWidth) / cellSize));
     const startY = Math.max(0, Math.floor(scrollPosition.y / cellSize));
-    const endY = Math.min(499, Math.ceil((scrollPosition.y + viewportHeight) / cellSize));
+    const endY = Math.min(19, Math.ceil((scrollPosition.y + viewportHeight) / cellSize));
 
     const pixels: Array<{
       pixel: PixelState;
@@ -162,7 +204,7 @@ const PixelGrid: React.FC<PixelGridProps> = ({
     <div className="pixel-grid-container">
       <div className="pixel-grid-info">
         <span>Zoom: {Math.round(zoomLevel * 100)}%</span>
-        <span>Grid: 500×500</span>
+        <span>Grid: 20×20</span>
         {selectedPixel && (
           <span>
             Selected: ({selectedPixel.x}, {selectedPixel.y})

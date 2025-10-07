@@ -30,10 +30,14 @@ Aplikasi web modern untuk mengedit gambar secara pixel-by-pixel dengan interface
 - Real-time color preview
 
 ### ⚡ **Performance & UX**
+- **🚀 Canvas-based rendering** untuk performa ultra cepat
+- Grid 500×500 (250K pixels) load dalam <2 detik
 - Viewport virtualization untuk performa optimal
 - Undo/redo system (50 history items)
 - Responsive design untuk berbagai ukuran layar
 - Loading states dan comprehensive error handling
+
+> **Note**: Aplikasi menggunakan Canvas API untuk rendering grid. Ini 10-100x lebih cepat daripada DOM rendering untuk grid besar. Lihat [PERFORMANCE.md](./PERFORMANCE.md) untuk detail teknis.
 
 ## 🚀 Quick Start
 

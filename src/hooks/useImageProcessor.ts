@@ -15,7 +15,7 @@ interface UseImageProcessorState {
 }
 
 interface UseImageProcessorActions {
-  processImage: (file: File) => Promise<void>;
+  processImage: (file: File, gridSize?: number) => Promise<void>;
   resetProcessor: () => void;
   clearError: () => void;
 }
@@ -34,7 +34,7 @@ export function useImageProcessor(): UseImageProcessorReturn {
     error: null,
   });
 
-  const processImage = useCallback(async (file: File) => {
+  const processImage = useCallback(async (file: File, gridSize?: number) => {
     setState(prev => ({
       ...prev,
       processing: true,
@@ -42,7 +42,7 @@ export function useImageProcessor(): UseImageProcessorReturn {
     }));
 
     try {
-      const result: ProcessingResult = await processImageToGrid(file);
+      const result: ProcessingResult = await processImageToGrid(file, gridSize);
 
       if (result.success && result.imageData && result.gridData) {
         setState(prev => ({

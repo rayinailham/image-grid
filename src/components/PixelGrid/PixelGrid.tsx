@@ -45,11 +45,11 @@ const PixelCell: React.FC<PixelCellProps> = ({
   }), [rgba, isSelected, isHovered, modified, cellSize]);
 
   // Show RGB values if cell is large enough
-  // For very small cells (< 15px), don't show text
-  // For medium cells (15-40px), show compact format
-  // For large cells (>= 40px), show full format
-  const showRgbText = cellSize >= 15;
-  const useCompactFormat = cellSize < 40;
+  // For very small cells (< 8px), don't show text
+  // For medium cells (8-25px), show compact format
+  // For large cells (>= 25px), show full format
+  const showRgbText = cellSize >= 8;
+  const useCompactFormat = cellSize < 25;
   
   // Calculate text color for contrast
   const brightness = (rgba.r * 299 + rgba.g * 587 + rgba.b * 114) / 1000;
@@ -112,15 +112,30 @@ const PixelGrid: React.FC<PixelGridProps> = ({
   const gridRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Calculate cell size based on zoom level
+  // Calculate cell size based on zoom level and grid size
   const cellSize = useMemo(() => {
-    const baseSize = 30; // Base pixel size in pixels (increased for 20x20 grid)
-    return Math.max(15, Math.floor(baseSize * zoomLevel));
-  }, [zoomLevel]);
+    if (!gridData) return 2;
+    
+    // Dynamically adjust base size based on grid dimensions
+    let baseSize: number;
+    if (gridData.width <= 20) {
+      baseSize = 30; // Larger cells for smaller grids
+    } else if (gridData.width <= 50) {
+      baseSize = 12;
+    } else if (gridData.width <= 100) {
+      baseSize = 6;
+    } else if (gridData.width <= 250) {
+      baseSize = 3;
+    } else {
+      baseSize = 2; // Smallest for 500x500
+    }
+    
+    return Math.max(1, Math.floor(baseSize * zoomLevel));
+  }, [zoomLevel, gridData]);
 
-  // Calculate grid dimensions (20x20 grid)
-  const gridWidth = useMemo(() => 20 * cellSize, [cellSize]);
-  const gridHeight = useMemo(() => 20 * cellSize, [cellSize]);
+  // Calculate grid dimensions dynamically based on gridData
+  const gridWidth = useMemo(() => (gridData?.width || 0) * cellSize, [gridData, cellSize]);
+  const gridHeight = useMemo(() => (gridData?.height || 0) * cellSize, [gridData, cellSize]);
 
   // Update container dimensions when mounted or gridData changes
   useEffect(() => {
@@ -197,8 +212,8 @@ const PixelGrid: React.FC<PixelGridProps> = ({
         top: number;
       }> = [];
 
-      for (let y = 0; y < 20; y++) {
-        for (let x = 0; x < 20; x++) {
+      for (let y = 0; y < gridData.height; y++) {
+        for (let x = 0; x < gridData.width; x++) {
           if (gridData.pixels[y] && gridData.pixels[y][x]) {
             pixels.push({
               pixel: gridData.pixels[y][x],
@@ -214,9 +229,9 @@ const PixelGrid: React.FC<PixelGridProps> = ({
     }
     
     const startX = Math.max(0, Math.floor(scrollPosition.x / cellSize));
-    const endX = Math.min(19, Math.ceil((scrollPosition.x + viewportWidth) / cellSize));
+    const endX = Math.min(gridData.width - 1, Math.ceil((scrollPosition.x + viewportWidth) / cellSize));
     const startY = Math.max(0, Math.floor(scrollPosition.y / cellSize));
-    const endY = Math.min(19, Math.ceil((scrollPosition.y + viewportHeight) / cellSize));
+    const endY = Math.min(gridData.height - 1, Math.ceil((scrollPosition.y + viewportHeight) / cellSize));
 
     const pixels: Array<{
       pixel: PixelState;
@@ -257,7 +272,7 @@ const PixelGrid: React.FC<PixelGridProps> = ({
     <div className="pixel-grid-container">
       <div className="pixel-grid-info">
         <span>Zoom: {Math.round(zoomLevel * 100)}%</span>
-        <span>Grid: 20×20</span>
+        <span>Grid: {gridData.width}×{gridData.height}</span>
         {selectedPixel && (
           <span>
             Selected: ({selectedPixel.x}, {selectedPixel.y})
@@ -282,6 +297,7 @@ const PixelGrid: React.FC<PixelGridProps> = ({
             width: `${gridWidth}px`,
             height: `${gridHeight}px`,
             position: 'relative',
+            backgroundSize: `${cellSize}px ${cellSize}px`,
           }}
         >
           {visiblePixels.map(({ pixel, x, y, left, top }) => (

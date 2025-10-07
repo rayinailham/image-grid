@@ -153,14 +153,14 @@ export function resizeImageToCanvas(
 /**
  * Extracts RGBA values from canvas context and creates a grid data structure
  */
-export function extractGridFromCanvas(ctx: CanvasRenderingContext2D): GridData {
-  const imageData = ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE);
+export function extractGridFromCanvas(ctx: CanvasRenderingContext2D, gridSize: number = GRID_SIZE): GridData {
+  const imageData = ctx.getImageData(0, 0, gridSize, gridSize);
   const pixels: PixelState[][] = [];
 
-  for (let y = 0; y < GRID_SIZE; y++) {
+  for (let y = 0; y < gridSize; y++) {
     pixels[y] = [];
-    for (let x = 0; x < GRID_SIZE; x++) {
-      const index = (y * GRID_SIZE + x) * 4;
+    for (let x = 0; x < gridSize; x++) {
+      const index = (y * gridSize + x) * 4;
       
       const rgba: RGBAColor = {
         r: imageData.data[index],
@@ -181,15 +181,15 @@ export function extractGridFromCanvas(ctx: CanvasRenderingContext2D): GridData {
 
   return {
     pixels,
-    width: GRID_SIZE,
-    height: GRID_SIZE,
+    width: gridSize,
+    height: gridSize,
   };
 }
 
 /**
  * Main function to process an uploaded image into grid data
  */
-export async function processImageToGrid(file: File): Promise<ProcessingResult> {
+export async function processImageToGrid(file: File, gridSize: number = GRID_SIZE): Promise<ProcessingResult> {
   try {
     // Validate file
     const validation = validateImageFile(file);
@@ -209,15 +209,15 @@ export async function processImageToGrid(file: File): Promise<ProcessingResult> 
 
     // Resize to grid dimensions
     const ctx = await resizeImageToCanvas(imageData, {
-      targetWidth: GRID_SIZE,
-      targetHeight: GRID_SIZE,
+      targetWidth: gridSize,
+      targetHeight: gridSize,
       maintainAspectRatio: true,
       centerImage: true,
       fillTransparent: true,
     });
 
     // Extract grid data
-    const gridData = extractGridFromCanvas(ctx);
+    const gridData = extractGridFromCanvas(ctx, gridSize);
 
     return {
       success: true,

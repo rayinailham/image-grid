@@ -4,9 +4,10 @@ import ImageUploader from '@/components/ImageUploader';
 import ImageCanvas from '@/components/ImageCanvas';
 import PixelGrid from '@/components/PixelGrid';
 import ColorPicker from '@/components/ColorPicker';
+import GridSizeSelector from '@/components/GridSizeSelector';
 import { useImageProcessor } from '@/hooks/useImageProcessor';
 import { usePixelGrid } from '@/hooks/usePixelGrid';
-import { RGBAColor } from '@/types';
+import { RGBAColor, GridSize, GRID_SIZE } from '@/types';
 import './App.css';
 
 const App: React.FC = () => {
@@ -34,10 +35,15 @@ const App: React.FC = () => {
 
   // Current color for the color picker - default to white
   const [currentColor, setCurrentColor] = useState<RGBAColor>({ r: 255, g: 255, b: 255, a: 1 });
+  
+  // Grid size state
+  const [selectedGridSize, setSelectedGridSize] = useState<GridSize>(GRID_SIZE as GridSize);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
 
   const handleImageUpload = useCallback(async (file: File) => {
-    await processImage(file);
-  }, [processImage]);
+    setCurrentFile(file);
+    await processImage(file, selectedGridSize);
+  }, [processImage, selectedGridSize]);
 
   // Handle pixel click - select pixel and update current color
   const handlePixelClick = useCallback((position: { x: number; y: number }) => {
@@ -68,6 +74,15 @@ const App: React.FC = () => {
     setScrollPosition(position);
   }, [setScrollPosition]);
 
+  // Handle grid size change
+  const handleGridSizeChange = useCallback(async (newSize: GridSize) => {
+    setSelectedGridSize(newSize);
+    // Reprocess current image with new grid size if an image is loaded
+    if (currentFile) {
+      await processImage(currentFile, newSize);
+    }
+  }, [currentFile, processImage]);
+
   // Update grid data when image processing completes
   React.useEffect(() => {
     if (gridData) {
@@ -80,6 +95,13 @@ const App: React.FC = () => {
       <div className="app-content">
         {!imageData ? (
           <div className="upload-section">
+            <div className="upload-controls">
+              <GridSizeSelector
+                selectedSize={selectedGridSize}
+                onSizeChange={handleGridSizeChange}
+                disabled={processing}
+              />
+            </div>
             <ImageUploader
               onImageUpload={handleImageUpload}
               processing={processing}
@@ -92,6 +114,11 @@ const App: React.FC = () => {
             <div className="editor-header">
               <h2>Image Editor</h2>
               <div className="editor-controls">
+                <GridSizeSelector
+                  selectedSize={selectedGridSize}
+                  onSizeChange={handleGridSizeChange}
+                  disabled={processing}
+                />
                 <div className="zoom-controls">
                   <button 
                     onClick={() => setZoomLevel(Math.max(0.25, zoomLevel - 0.25))}
@@ -138,7 +165,7 @@ const App: React.FC = () => {
               </div>
               
               <div className="grid-panel">
-                <h3>Pixel Grid Editor (20×20)</h3>
+                <h3>Pixel Grid Editor ({selectedGridSize}×{selectedGridSize})</h3>
                 <PixelGrid
                   gridData={pixelGridData}
                   selectedPixel={selectedPixel}

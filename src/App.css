@@ -1,0 +1,439 @@
+/* App.css - Main application styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+}
+
+/* Layout Styles */
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.app-header p {
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.app-main {
+  flex: 1;
+  padding: 2rem;
+}
+
+.app-footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+}
+
+/* App Content Styles */
+.app-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.upload-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+/* Image Uploader Styles */
+.image-uploader {
+  width: 100%;
+  max-width: 600px;
+}
+
+.dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.dropzone:hover {
+  border-color: #667eea;
+  background-color: #f8f9ff;
+}
+
+.dropzone.active {
+  border-color: #667eea;
+  background-color: #f0f4ff;
+  transform: scale(1.02);
+}
+
+.dropzone.reject {
+  border-color: #e74c3c;
+  background-color: #fff5f5;
+}
+
+.dropzone.processing {
+  border-color: #f39c12;
+  background-color: #fffbf5;
+  cursor: not-allowed;
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.upload-state.processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.upload-info {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #c33;
+}
+
+.error-icon {
+  font-size: 1.2rem;
+}
+
+.error-text {
+  flex: 1;
+}
+
+.clear-error {
+  background: none;
+  border: none;
+  color: #c33;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.2rem;
+  border-radius: 4px;
+}
+
+.clear-error:hover {
+  background-color: rgba(204, 51, 51, 0.1);
+}
+
+/* Editor Section Styles */
+.editor-section {
+  width: 100%;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.editor-header h2 {
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.editor-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+.zoom-controls button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease;
+}
+
+.zoom-controls button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.zoom-controls button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.zoom-level {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #495057;
+  min-width: 50px;
+  text-align: center;
+}
+
+.new-image-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.new-image-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.editor-workspace {
+  display: grid;
+  grid-template-columns: 1fr 2fr 350px;
+  gap: 1.5rem;
+  align-items: start;
+  min-height: 600px;
+}
+
+.image-panel,
+.grid-panel,
+.color-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  height: fit-content;
+}
+
+.grid-panel {
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.color-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.image-panel h3,
+.grid-panel h3,
+.color-panel h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.pixel-info {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.pixel-info h4 {
+  margin: 0 0 0.75rem 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.pixel-info p {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.pixel-info strong {
+  color: #495057;
+}
+
+.image-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.image-info p {
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.image-info strong {
+  color: #333;
+}
+
+/* Image Canvas Styles */
+.image-canvas-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-canvas {
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.canvas-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Grid Placeholder Styles */
+.grid-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  color: #666;
+  text-align: center;
+}
+
+.grid-placeholder p {
+  margin-bottom: 0.5rem;
+}
+
+.grid-stats {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.grid-stats p {
+  margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .editor-workspace {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  
+  .color-panel {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: 1rem;
+  }
+  
+  .editor-workspace {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .color-panel {
+    grid-template-columns: 1fr;
+  }
+  
+  .editor-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .editor-controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .dropzone {
+    padding: 2rem 1rem;
+  }
+}

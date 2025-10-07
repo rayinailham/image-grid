@@ -1,0 +1,109 @@
+.pixel-grid-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pixel-grid-info {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #e9ecef;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 0.875rem;
+  font-family: 'Courier New', monospace;
+  color: #495057;
+}
+
+.pixel-grid-info span {
+  white-space: nowrap;
+}
+
+.pixel-grid-scroll-container {
+  flex: 1;
+  overflow: auto;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.pixel-grid {
+  background-color: #f8f9fa;
+  background-image: 
+    linear-gradient(90deg, #e9ecef 1px, transparent 1px),
+    linear-gradient(#e9ecef 1px, transparent 1px);
+  background-size: 20px 20px;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.pixel-cell {
+  box-sizing: border-box;
+  position: relative;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixel-cell:hover {
+  z-index: 10;
+}
+
+.pixel-grid-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #6c757d;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.pixel-grid-placeholder p {
+  margin: 0;
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* Scrollbar styling for webkit browsers */
+.pixel-grid-scroll-container::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.pixel-grid-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.pixel-grid-scroll-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 6px;
+}
+
+.pixel-grid-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.pixel-grid-scroll-container::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pixel-grid-info {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .pixel-grid-placeholder {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}

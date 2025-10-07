@@ -108,6 +108,7 @@ const PixelGrid: React.FC<PixelGridProps> = ({
   onScrollChange,
 }) => {
   const [hoveredPixel, setHoveredPixel] = useState<GridPosition | null>(null);
+  const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
   const gridRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -120,6 +121,34 @@ const PixelGrid: React.FC<PixelGridProps> = ({
   // Calculate grid dimensions (20x20 grid)
   const gridWidth = useMemo(() => 20 * cellSize, [cellSize]);
   const gridHeight = useMemo(() => 20 * cellSize, [cellSize]);
+
+  // Update container dimensions when mounted or gridData changes
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (scrollContainerRef.current) {
+        setContainerDimensions({
+          width: scrollContainerRef.current.clientWidth,
+          height: scrollContainerRef.current.clientHeight,
+        });
+      }
+    };
+
+    updateDimensions();
+    
+    // Also update dimensions after a short delay to ensure layout is complete
+    const timeoutId = setTimeout(updateDimensions, 100);
+    
+    // Use ResizeObserver to detect container size changes
+    const resizeObserver = new ResizeObserver(updateDimensions);
+    if (scrollContainerRef.current) {
+      resizeObserver.observe(scrollContainerRef.current);
+    }
+    
+    return () => {
+      clearTimeout(timeoutId);
+      resizeObserver.disconnect();
+    };
+  }, [gridData]);
 
   // Handle scroll changes
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -154,11 +183,35 @@ const PixelGrid: React.FC<PixelGridProps> = ({
   const visiblePixels = useMemo(() => {
     if (!gridData || cellSize < 1) return [];
 
-    const container = scrollContainerRef.current;
-    if (!container) return [];
+    // Use containerDimensions state instead of directly accessing DOM
+    const viewportWidth = containerDimensions.width || 800; // Fallback to reasonable default
+    const viewportHeight = containerDimensions.height || 600;
+    
+    // If dimensions are still 0, render all pixels (failsafe)
+    if (viewportWidth === 0 && viewportHeight === 0) {
+      const pixels: Array<{
+        pixel: PixelState;
+        x: number;
+        y: number;
+        left: number;
+        top: number;
+      }> = [];
 
-    const viewportWidth = container.clientWidth;
-    const viewportHeight = container.clientHeight;
+      for (let y = 0; y < 20; y++) {
+        for (let x = 0; x < 20; x++) {
+          if (gridData.pixels[y] && gridData.pixels[y][x]) {
+            pixels.push({
+              pixel: gridData.pixels[y][x],
+              x,
+              y,
+              left: x * cellSize,
+              top: y * cellSize,
+            });
+          }
+        }
+      }
+      return pixels;
+    }
     
     const startX = Math.max(0, Math.floor(scrollPosition.x / cellSize));
     const endX = Math.min(19, Math.ceil((scrollPosition.x + viewportWidth) / cellSize));
@@ -188,7 +241,7 @@ const PixelGrid: React.FC<PixelGridProps> = ({
     }
 
     return pixels;
-  }, [gridData, cellSize, scrollPosition]);
+  }, [gridData, cellSize, scrollPosition, containerDimensions]);
 
   if (!gridData) {
     return (

@@ -6,6 +6,7 @@ import PixelGrid from '@/components/PixelGrid';
 import PixelGridCanvas from '@/components/PixelGrid/PixelGridCanvas';
 import ColorPicker from '@/components/ColorPicker';
 import GridSizeSelector from '@/components/GridSizeSelector';
+import RGBATable from '@/components/RGBATable';
 import { useImageProcessor } from '@/hooks/useImageProcessor';
 import { usePixelGrid } from '@/hooks/usePixelGrid';
 import { RGBAColor, GridSize, GRID_SIZE } from '@/types';
@@ -208,6 +209,9 @@ const App: React.FC = () => {
                 )}
               </div>
             </div>
+            
+            {/* RGBA Table Section */}
+            <RGBATable gridData={pixelGridData} />
           </div>
         )}
       </div>

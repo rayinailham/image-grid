@@ -281,7 +281,6 @@ body {
 }
 
 .image-panel,
-.grid-panel,
 .color-panel {
   background: white;
   border-radius: 12px;
@@ -291,9 +290,15 @@ body {
 }
 
 .grid-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   min-height: 600px;
+  height: 600px; /* Fixed height for proper scrolling */
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Prevent grid panel from expanding */
 }
 
 .color-panel {

@@ -292,32 +292,21 @@ const PixelGridCanvas: React.FC<PixelGridCanvasProps> = ({
 
   return (
     <>
-      <div className="canvas-mode-badge">
-        🚀 Canvas Mode - Dual Layer (Anti-Blink) 
-        <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>
-          Grid: {gridData.width}×{gridData.height} | No more hover blinking!
-        </div>
-        {gridData.width * gridData.height > 100000 && (
-          <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-            💡 Tip: Zoom in untuk detail yang lebih baik, zoom out untuk overview
-          </div>
-        )}
-        
-        {/* Grid Info - Moved outside of grid container */}
-        <div style={{ 
-          display: 'flex', 
-          gap: '15px', 
-          fontSize: '12px', 
-          color: '#555',
-          marginTop: '8px',
-          padding: '8px 12px',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #e9ecef',
-          borderRadius: '4px',
-          flexWrap: 'wrap'
-        }}>
-          <span>Zoom: {Math.round(zoomLevel * 100)}%</span>
-          <span>Grid: {gridData.width}×{gridData.height}</span>
+      {/* Grid Info - Moved outside of grid container */}
+      <div style={{ 
+        display: 'flex', 
+        gap: '15px', 
+        fontSize: '12px', 
+        color: '#555',
+        marginTop: '8px',
+        padding: '8px 12px',
+        backgroundColor: '#f8f9fa',
+        border: '1px solid #e9ecef',
+        borderRadius: '4px',
+        flexWrap: 'wrap'
+      }}>
+        <span>Zoom: {Math.round(zoomLevel * 100)}%</span>
+        <span>Grid: {gridData.width}×{gridData.height}</span>
           <span>Cell Size: {cellSize}px</span>
           {selectedPixel && (
             <span style={{ color: '#007bff', fontWeight: 'bold' }}>
@@ -330,7 +319,6 @@ const PixelGridCanvas: React.FC<PixelGridCanvasProps> = ({
             </span>
           )}
         </div>
-      </div>
       
       <div className="pixel-grid-container">
       

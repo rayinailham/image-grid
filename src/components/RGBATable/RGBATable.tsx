@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { GridData, RGBAColor } from '@/types';
 import './RGBATable.css';
 
@@ -28,6 +28,13 @@ const RGBATable: React.FC<RGBATableProps> = ({
   const [sortField, setSortField] = useState<keyof TableRow>('position');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [filterModified, setFilterModified] = useState(false);
+  const [searchX, setSearchX] = useState('');
+  const [searchY, setSearchY] = useState('');
+
+  // Reset pagination when search changes
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [searchX, searchY]);
 
   // Convert RGBA to hex color
   const rgbaToHex = (rgba: RGBAColor): string => {
@@ -75,6 +82,20 @@ const RGBATable: React.FC<RGBATableProps> = ({
       filtered = filtered.filter(row => row.modified);
     }
 
+    // Apply search filters
+    if (searchX) {
+      const xNum = parseInt(searchX);
+      if (!isNaN(xNum)) {
+        filtered = filtered.filter(row => row.x === xNum);
+      }
+    }
+    if (searchY) {
+      const yNum = parseInt(searchY);
+      if (!isNaN(yNum)) {
+        filtered = filtered.filter(row => row.y === yNum);
+      }
+    }
+
     // Apply sorting
     filtered.sort((a, b) => {
       const aValue = a[sortField];
@@ -95,7 +116,7 @@ const RGBATable: React.FC<RGBATableProps> = ({
     });
 
     return filtered;
-  }, [tableData, sortField, sortDirection, filterModified]);
+  }, [tableData, sortField, sortDirection, filterModified, searchX, searchY]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage);
@@ -174,6 +195,27 @@ const RGBATable: React.FC<RGBATableProps> = ({
       </div>
 
       <div className="rgba-table-controls">
+        <div className="search-controls">
+          <label>
+            Cari X:
+            <input
+              type="number"
+              value={searchX}
+              onChange={(e) => setSearchX(e.target.value)}
+              placeholder="Masukkan X"
+            />
+          </label>
+          <label>
+            Cari Y:
+            <input
+              type="number"
+              value={searchY}
+              onChange={(e) => setSearchY(e.target.value)}
+              placeholder="Masukkan Y"
+            />
+          </label>
+        </div>
+
         <div className="filter-controls">
           <label>
             <input
@@ -259,6 +301,12 @@ const RGBATable: React.FC<RGBATableProps> = ({
           </tbody>
         </table>
       </div>
+
+      {filteredAndSortedData.length === 0 && (searchX || searchY) && (
+        <div className="no-results">
+          Tidak ada pixel ditemukan untuk koordinat tersebut.
+        </div>
+      )}
 
       {totalPages > 1 && (
         <div className="rgba-table-pagination">

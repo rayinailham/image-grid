@@ -34,6 +34,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
       b: Math.round(color.rgb.b),
       a: color.rgb.a || 1,
     };
+    console.log('[ColorPicker] handleColorChange', newColor);
     onColorChange(newColor);
   }, [onColorChange]);
 
@@ -111,7 +112,12 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
                 style={{
                   backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
                 }}
-                onClick={() => !disabled && onColorChange(color)}
+                onClick={() => {
+                  if (!disabled) {
+                    console.log('[ColorPicker] Quick palette color selected', color);
+                    onColorChange(color);
+                  }
+                }}
                 title={`RGB(${color.r}, ${color.g}, ${color.b})`}
               />
             ))}

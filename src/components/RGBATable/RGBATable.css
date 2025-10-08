@@ -294,3 +294,32 @@
     width: 100%;
   }
 }
+
+.search-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.search-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.search-controls input {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 80px;
+}
+
+.no-results {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}

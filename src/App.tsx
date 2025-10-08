@@ -53,15 +53,18 @@ const App: React.FC = () => {
     // Update current color to selected pixel's color
     if (pixelGridData && pixelGridData.pixels[position.y] && pixelGridData.pixels[position.y][position.x]) {
       const pixelColor = pixelGridData.pixels[position.y][position.x].rgba;
+      console.log('[App] Pixel clicked, updating currentColor', pixelColor, 'at', position);
       setCurrentColor(pixelColor);
     }
   }, [selectPixel, pixelGridData, setCurrentColor]);
 
   // Handle color change from color picker
   const handleColorChange = useCallback((color: RGBAColor) => {
+    console.log('[App] ColorPicker changed color', color);
     setCurrentColor(color);
     // If a pixel is selected, update it with the new color
     if (selectedPixel) {
+      console.log('[App] Update pixel color', selectedPixel, color);
       updatePixel(selectedPixel.x, selectedPixel.y, color);
     }
   }, [setCurrentColor, selectedPixel, updatePixel]);

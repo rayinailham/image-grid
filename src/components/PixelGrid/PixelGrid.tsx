@@ -37,11 +37,11 @@ const PixelCell: React.FC<PixelCellProps> = ({
     width: `${cellSize}px`,
     height: `${cellSize}px`,
     backgroundColor: `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`,
-    border: isSelected ? '2px solid #007bff' : 
-            isHovered ? '1px solid #28a745' :
-            modified ? '1px solid #ffc107' : '1px solid #e0e0e0',
+    boxShadow: isSelected ? 'inset 0 0 0 2px #007bff' : 
+                isHovered ? 'inset 0 0 0 1px #28a745' :
+                modified ? 'inset 0 0 0 1px #ffc107' : 'inset 0 0 0 1px #e0e0e0',
     cursor: 'pointer',
-    transition: 'border-color 0.1s ease',
+    transition: 'box-shadow 0.1s ease',
   }), [rgba, isSelected, isHovered, modified, cellSize]);
 
   // Show RGB values if cell is large enough
@@ -269,60 +269,83 @@ const PixelGrid: React.FC<PixelGridProps> = ({
   }
 
   return (
-    <div className="pixel-grid-container">
-      <div className="pixel-grid-info">
+    <>
+      {/* Grid Info - Moved outside of grid container */}
+      <div style={{ 
+        display: 'flex', 
+        gap: '15px', 
+        fontSize: '12px', 
+        color: '#555',
+        marginBottom: '8px',
+        padding: '8px 12px',
+        backgroundColor: '#f8f9fa',
+        border: '1px solid #e9ecef',
+        borderRadius: '4px',
+        flexWrap: 'wrap'
+      }}>
+        <span>🎯 DOM Mode</span>
         <span>Zoom: {Math.round(zoomLevel * 100)}%</span>
         <span>Grid: {gridData.width}×{gridData.height}</span>
+        <span>Cell Size: {cellSize}px</span>
         {selectedPixel && (
-          <span>
+          <span style={{ color: '#007bff', fontWeight: 'bold' }}>
             Selected: ({selectedPixel.x}, {selectedPixel.y})
           </span>
         )}
         {hoveredPixel && (
-          <span>
+          <span style={{ color: '#28a745' }}>
             Hover: ({hoveredPixel.x}, {hoveredPixel.y})
           </span>
         )}
       </div>
       
-      <div
-        ref={scrollContainerRef}
-        className="pixel-grid-scroll-container"
-        onScroll={handleScroll}
-      >
+      <div className="pixel-grid-container">
         <div
-          ref={gridRef}
-          className="pixel-grid"
-          style={{
-            width: `${gridWidth}px`,
-            height: `${gridHeight}px`,
-            position: 'relative',
-            backgroundSize: `${cellSize}px ${cellSize}px`,
-          }}
+          ref={scrollContainerRef}
+          className="pixel-grid-scroll-container"
+          onScroll={handleScroll}
         >
-          {visiblePixels.map(({ pixel, x, y, left, top }) => (
-            <div
-              key={`${x}-${y}`}
-              style={{
-                position: 'absolute',
-                left: `${left}px`,
-                top: `${top}px`,
-              }}
-            >
-              <PixelCell
-                pixel={pixel}
-                isSelected={selectedPixel?.x === x && selectedPixel?.y === y}
-                isHovered={hoveredPixel?.x === x && hoveredPixel?.y === y}
-                cellSize={cellSize}
-                onClick={() => handlePixelClick(x, y)}
-                onMouseEnter={() => handlePixelHover(x, y)}
-                onMouseLeave={handlePixelLeave}
-              />
-            </div>
-          ))}
+          <div
+            ref={gridRef}
+            className="pixel-grid"
+            style={{
+              width: `${gridWidth}px`,
+              height: `${gridHeight}px`,
+              position: 'relative',
+              backgroundSize: `${cellSize}px ${cellSize}px`,
+              margin: 0,
+              padding: 0,
+              lineHeight: 0,
+              fontSize: 0,
+            }}
+          >
+            {visiblePixels.map(({ pixel, x, y, left, top }) => (
+              <div
+                key={`${x}-${y}`}
+                style={{
+                  position: 'absolute',
+                  left: `${left}px`,
+                  top: `${top}px`,
+                  margin: 0,
+                  padding: 0,
+                  lineHeight: 0,
+                }}
+              >
+                <PixelCell
+                  pixel={pixel}
+                  isSelected={selectedPixel?.x === x && selectedPixel?.y === y}
+                  isHovered={hoveredPixel?.x === x && hoveredPixel?.y === y}
+                  cellSize={cellSize}
+                  onClick={() => handlePixelClick(x, y)}
+                  onMouseEnter={() => handlePixelHover(x, y)}
+                  onMouseLeave={handlePixelLeave}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

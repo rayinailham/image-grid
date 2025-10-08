@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import ImageUploader from '@/components/ImageUploader';
 import ImageCanvas from '@/components/ImageCanvas';
 import PixelGrid from '@/components/PixelGrid';
+import PixelGridCanvas from '@/components/PixelGrid/PixelGridCanvas';
 import ColorPicker from '@/components/ColorPicker';
 import GridSizeSelector from '@/components/GridSizeSelector';
 import { useImageProcessor } from '@/hooks/useImageProcessor';
@@ -166,15 +167,28 @@ const App: React.FC = () => {
               
               <div className="grid-panel">
                 <h3>Pixel Grid Editor ({selectedGridSize}×{selectedGridSize})</h3>
-                <PixelGrid
-                  gridData={pixelGridData}
-                  selectedPixel={selectedPixel}
-                  onPixelClick={handlePixelClick}
-                  onPixelUpdate={handlePixelUpdate}
-                  zoomLevel={zoomLevel}
-                  scrollPosition={scrollPosition}
-                  onScrollChange={handleScrollChange}
-                />
+                {/* Use Canvas mode for large grids (>100x100) for better performance */}
+                {pixelGridData && pixelGridData.width > 100 ? (
+                  <PixelGridCanvas
+                    gridData={pixelGridData}
+                    selectedPixel={selectedPixel}
+                    onPixelClick={handlePixelClick}
+                    onPixelUpdate={handlePixelUpdate}
+                    zoomLevel={zoomLevel}
+                    scrollPosition={scrollPosition}
+                    onScrollChange={handleScrollChange}
+                  />
+                ) : (
+                  <PixelGrid
+                    gridData={pixelGridData}
+                    selectedPixel={selectedPixel}
+                    onPixelClick={handlePixelClick}
+                    onPixelUpdate={handlePixelUpdate}
+                    zoomLevel={zoomLevel}
+                    scrollPosition={scrollPosition}
+                    onScrollChange={handleScrollChange}
+                  />
+                )}
               </div>
 
               <div className="color-panel">
